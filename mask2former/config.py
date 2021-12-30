@@ -89,9 +89,32 @@ def add_maskformer2_config(cfg):
     cfg.MODEL.SWIN.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
     cfg.MODEL.SWIN.USE_CHECKPOINT = False
 
+    # vit backbone
+    cfg.MODEL.VIT = CN()
+    cfg.MODEL.VIT.IMG_SIZE = 224
+    cfg.MODEL.VIT.PATCH_SIZE = 4
+    cfg.MODEL.VIT.EMBED_DIM = 768
+    cfg.MODEL.VIT.NUM_LAYERS = 12
+    cfg.MODEL.VIT.NUM_FC = 2
+    cfg.MODEL.VIT.NUM_HEAD = 12
+    cfg.MODEL.VIT.MLP_RATIO = 4
+    cfg.MODEL.VIT.DROP_RATE = 0.2
+    cfg.MODEL.VIT.ATTN_DROP_RATE = 0.1
+    cfg.MODEL.VIT.DROP_PATH_RATE = 0.3
+    cfg.MODEL.VIT.QKV_BIAS = True
+    cfg.MODEL.VIT.FINAL_NORM = True
+    cfg.MODEL.VIT.WITH_CLS_TOKEN = True
+    cfg.MODEL.VIT.FROZEN_STAGE = -1
+    cfg.MODEL.VIT.OUT_INDICES = [3, 6, 9, 12]
+    cfg.MODEL.VIT.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
+    cfg.MODEL.VIT.PRETRAINED = True
+    cfg.MODEL.VIT.USE_CHECKPOINT = False
+
     # NOTE: maskformer2 extra configs
     # transformer module
-    cfg.MODEL.MASK_FORMER.TRANSFORMER_DECODER_NAME = "MultiScaleMaskedTransformerDecoder"
+    cfg.MODEL.MASK_FORMER.TRANSFORMER_DECODER_NAME = (
+        "MultiScaleMaskedTransformerDecoder"
+    )
 
     # LSJ aug
     cfg.INPUT.IMAGE_SIZE = 1024
@@ -99,7 +122,11 @@ def add_maskformer2_config(cfg):
     cfg.INPUT.MAX_SCALE = 2.0
 
     # MSDeformAttn encoder configs
-    cfg.MODEL.SEM_SEG_HEAD.DEFORMABLE_TRANSFORMER_ENCODER_IN_FEATURES = ["res3", "res4", "res5"]
+    cfg.MODEL.SEM_SEG_HEAD.DEFORMABLE_TRANSFORMER_ENCODER_IN_FEATURES = [
+        "res3",
+        "res4",
+        "res5",
+    ]
     cfg.MODEL.SEM_SEG_HEAD.DEFORMABLE_TRANSFORMER_ENCODER_N_POINTS = 4
     cfg.MODEL.SEM_SEG_HEAD.DEFORMABLE_TRANSFORMER_ENCODER_N_HEADS = 8
 
