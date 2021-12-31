@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 
 from einops import rearrange, repeat
-from einops.layers.torch import Rearrange
 
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 
@@ -83,8 +82,9 @@ class VisionTransformerLayer(nn.Module):
         self.norm2 = nn.LayerNorm(embed_dim)
 
     def forward(self, x):
-        x = self.attn(self.norm1(x)) + x
-        return self.ffn(self.norm2(x)) + x
+        out = self.norm1(x)
+        out = self.attn(out, out, out)[0] + x
+        return self.ffn(self.norm2(out)) + out
 
 
 @BACKBONE_REGISTRY.register()
@@ -198,9 +198,9 @@ class VisionTransformer(Backbone):
 
     def forward(self, x):
         x = self.patch_embed(x)
-        h, w = x.shape[-2], x.shape[-1]
-        rearrange(x, "b c h w -> b (h w) c")
-        batch_size, num_patch, _ = x.shape
+        batch_size, _, h, w = x.shape
+        num_patch = h * w
+        x = rearrange(x, "b c h w -> b (h w) c")
 
         cls_token = repeat(self.cls_token, "() n d -> b n d", b=batch_size)
         x = torch.cat((cls_token, x), dim=1)
@@ -218,7 +218,7 @@ class VisionTransformer(Backbone):
 
             if (i + 1) in self.out_indices:
                 out = x[:, 1:] if self.with_cls_token else x
-                rearrange(out, "b (h w) c -> b c h w", h=h)
+                out = rearrange(out, "b (h w) c -> b c h w", h=h)
                 outs[f"res{len(outs) + 2}"] = out
 
         return outs

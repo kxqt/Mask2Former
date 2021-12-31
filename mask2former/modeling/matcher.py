@@ -120,13 +120,13 @@ class HungarianMatcher(nn.Module):
             point_coords = torch.rand(1, self.num_points, 2, device=out_mask.device)
             # get gt labels
             tgt_mask = point_sample(
-                tgt_mask,
+                tgt_mask.float(),
                 point_coords.repeat(tgt_mask.shape[0], 1, 1),
                 align_corners=False,
             ).squeeze(1)
 
             out_mask = point_sample(
-                out_mask,
+                out_mask.float(),
                 point_coords.repeat(out_mask.shape[0], 1, 1),
                 align_corners=False,
             ).squeeze(1)
