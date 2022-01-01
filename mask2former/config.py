@@ -109,6 +109,8 @@ def add_maskformer2_config(cfg):
     cfg.MODEL.VIT.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
     cfg.MODEL.VIT.PRETRAINED = True
     cfg.MODEL.VIT.USE_CHECKPOINT = False
+    cfg.MODEL.VIT.WEIGHTS = None
+    cfg.MODEL.VIT.POS_EMBED_INTERPOLATE_MODE = 'bicubic'
 
     # NOTE: maskformer2 extra configs
     # transformer module
